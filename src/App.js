@@ -1,23 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
 
 function App() {
+  const [drag, setDrag] = useState(false); 
+  const [width, setWidth] = useState("280");
+  const [translate, setTranslate] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const handlePointerDown = () => {
+    setDrag(true);
+  };
+
+  const handlePointerUp = () => {
+    setDrag(false);
+  };
+
+  const handlePointerMove = (e) => {
+    if (drag) {
+      setTranslate({
+        x: translate.x + e.movementX,
+        y: translate.y + e.movementY,
+      });
+    }
+  };
+
+  const handleChange = (e) => {
+    const len = e.target.value.length;
+    setWidth(len * 20);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container" onMouseUp={handlePointerUp}>
+      <img src="https://source.unsplash.com/random/900×600/?Nature" alt="" draggable="false"/>
+      <div
+        className="wrapper"
+        onMouseDown={handlePointerDown}
+        onMouseUp={handlePointerUp}
+        onMouseMove={handlePointerMove}
+      >
+        <input
+          style={{
+            transform: `translateX(${translate.x}px) translateY(${translate.y}px)`,
+            width: `${width}px`,
+          }}
+          placeholder="Task Completed"
+          name=""
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 }
